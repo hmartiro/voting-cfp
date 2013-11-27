@@ -1,11 +1,16 @@
 # Django settings for voting_project project.
 
+import os
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
+
+# Get the absolute path to the django project
+DJANGO_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../')
 
 MANAGERS = ADMINS
 
@@ -111,6 +116,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(DJANGO_DIR, 'templates'),
 )
 
 INSTALLED_APPS = (

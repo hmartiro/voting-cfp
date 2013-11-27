@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'voting_project.views.home', name='home'),
+    url(r'^$', 'vote_app.views.home', name='home'),
     # url(r'^voting_project/', include('voting_project.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -7,7 +7,7 @@ class Voter(models.Model):
 	name = models.CharField(max_length=40)
 
 	def __unicode__(self):
-		return u"Voter: %s" % (self.name)
+		return u"%s" % (self.name)
 
 class Discussion(models.Model):
 
@@ -15,7 +15,7 @@ class Discussion(models.Model):
 	description = models.TextField(max_length=200, blank=True)
 
 	def __unicode__(self):
-		return u"Discussion: %s" % (self.name)
+		return u"%s" % (self.name)
 
 class Vote(models.Model):
 
@@ -30,4 +30,4 @@ class Vote(models.Model):
 	time = models.DateTimeField(auto_now_add=True)
 
 	def __unicode__(self):
-		return u"%s voted %s at %s during %s" % (self.voter, self.value, self.time, self.discussion)
+		return u"%s voted %s during %s discussion at %s" % (self.voter, self.value, self.discussion, self.time)
