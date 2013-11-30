@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>View data</h3>
+    <p>
+        Click a discussion to view data for it.
+    </p>
+    <ul>
+          {% for discussion in discussions %}
+            <li>
+                <a href="{{discussion.id}}">
+                    {{ discussion }}
+                </a>
+            </li>
+          {% endfor %}
+    </ul>
+{% endblock %}

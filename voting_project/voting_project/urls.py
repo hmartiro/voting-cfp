@@ -7,6 +7,12 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'vote_app.views.home', name='home'),
+    url(r'^about/', 'vote_app.views.about', name='about'),
+    url(r'^vote/', 'vote_app.views.vote', name='vote'),
+
+    url(r'^view/$', 'vote_app.views.view_home', name='view_home'),
+    url(r'^view/(?P<discussion_id>\d+)/$', 'vote_app.views.view', name='view'),
+
     # url(r'^voting_project/', include('voting_project.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

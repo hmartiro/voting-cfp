@@ -1,7 +1,27 @@
-Here are all votes currently recorded:
+{% extends "base.html" %}
+{% block content %}
+<h3>Binary voting experiment</h3>
 
-<ol>
-	{% for vote in all_votes %}
-		<li>{{ vote }}</li>
-	{% endfor %}
-</ol>
+<div class='selects row'>
+  <select class="selectpicker show-tick show-menu-arrow col-xs-5 col-md-3" 
+     data-live-search="true" data-size="10" id="voter"
+    title="Select participant..">
+      {% for voter in voters %}
+        <option value="{{ voter.id }}">{{ voter }}</option>
+      {% endfor %}
+  </select>
+  <select class="selectpicker show-tick show-menu-arrow col-xs-5 col-md-3" 
+    data-live-search="true" data-size="10" id="discussion"
+    title="Select discussion..">
+      {% for discussion in discussions %}
+        <option value="{{ discussion.id }}">{{ discussion }}</option>
+      {% endfor %}
+  </select>
+</div>
+<div class="row">
+<div class="vote-buttons col-xs-12 col-md-8 col-lg-7">
+  <button type="button" class="btn btn-primary btn-lg btn-block" id="btn-up">Agree</button>
+  <button type="button" class="btn btn-danger btn-lg btn-block" id="btn-down">Disagree</button>
+</div>
+</div>
+{% endblock %}
