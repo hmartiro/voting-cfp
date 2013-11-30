@@ -15,7 +15,8 @@ DJANGO_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../')
 MANAGERS = ADMINS
 
 if os.environ['USER'] == 'ubuntu':
-    'default': {
+    DATABASES = {
+        'default': {
             'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
             'NAME': 'votingcfpdb',                      # Or path to database file if using sqlite3.
             'USER': 'root',
