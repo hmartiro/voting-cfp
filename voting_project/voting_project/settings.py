@@ -14,7 +14,7 @@ DJANGO_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../')
 
 MANAGERS = ADMINS
 
-if os.environ['USER'] == 'ubuntu':
+if os.environ['USER'] != 'hayk': 
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -37,7 +37,7 @@ else:
             'PORT': '',                      # Set to empty string for default.
         }
     }
-print DATABASES
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
