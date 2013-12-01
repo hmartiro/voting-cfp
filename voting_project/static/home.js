@@ -27,8 +27,8 @@ $(document).ready(function(){
     })
 
     $('#voter').on('change', function(){
-
-        voter = $("[data-id='voter']").next().find('li').filter(".selected").find('span')[0].innerText
+        
+        voter = $("[data-id='voter']").find('.filter-option')[0].innerText
         console.log("new voter " + voter)
 
         voter_id = $('#voter option').filter(function () { return $(this).html() == voter; }).attr('value')
@@ -37,7 +37,7 @@ $(document).ready(function(){
 
     $('#discussion').on('change', function(){
 
-        discussion = $("[data-id='discussion']").next().find('li').filter(".selected").find('span')[0].innerText
+        discussion = $("[data-id='discussion']").find('.filter-option')[0].innerText
         console.log("new discussion " + discussion)
 
         discussion_id = $('#discussion option').filter(function () { return $(this).html() == discussion; }).attr('value')

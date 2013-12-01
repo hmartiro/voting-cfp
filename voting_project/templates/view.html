@@ -5,9 +5,9 @@
 {% block content %}
     <h3>Results: {{ discussion }}</h3>
     <p>
-        Press play to view the experiment results of the discussion on {{discussion}}. 
+        Press play to view the momentum results of the discussion on {{discussion}}. 
     </p><p>
-        The first recorded vote is at {{ start_time }}.
+        The first recorded vote is at {{ start_time }}, and the fade time used is {{ fade_time }} seconds.
     </p>
     <!--<ul>
         {% for vote in votes %}
@@ -15,24 +15,47 @@
         {% endfor %}
     </ul>-->
 
-    <button class="btn btn-primary btn-large" id="results-play">Play</button>
-    <button class="btn btn-danger btn-large" id="results-reset">Reset</button>
-    <div id="placeholder"></div>
+    <button class="btn btn-success btn-large" id="results-play">Play</button>
+    <button class="btn btn-default btn-large" id="results-reset">Reset</button>
+    <div id="canvas"></div>
 
     <script src="/static/jquery.flot.min.js"></script>
+
     <script>
     $(function() {
+
+      // Parameters of the generated data
+      var data_fps = {{ fps }}
+      var data_fade_time = {{ fade_time }}
 
       var FPS = 25.0;
       var FRAMETIME = 1.0 / FPS;
       var frame = 0;
 
-      var container = $("#placeholder");
+      var container = $("#canvas");
 
       // Determine how many data points to keep based on the placeholder's initial size;
       // this gives us a nice high-res plot while avoiding more than one point per pixel.
 
       //var maximum = container.outerWidth() / 2 || 300;
+
+      var m_times = [
+        {% for t in m_times %}
+          {{ t }},
+        {% endfor %}
+      ]
+
+      var m_up = [
+        {% for m in m_up %}
+          {{ m }},
+        {% endfor %}
+      ]
+
+      var m_down = [
+        {% for m in m_down %}
+          {{ m }},
+        {% endfor %}
+      ]
 
       var values_all = [
         {% for v in values %}
@@ -50,103 +73,79 @@
 
       var playing = false;
 
-      function getData() {
+      function getData(up) {
 
         var t = frame * FRAMETIME;
+        var res = [];
 
-        var values = [];
-        var times = [];
+        for(var i = 0; i < m_times.length; i++) {
 
-        for(var i = 0; i < values_all.length; i++) {
-          value = values_all[i]
-          time = times_all[i] + time_window
+          time = m_times[i] + time_window
+
           if((time > t) && (time < (t + time_window + 5))) {
-            values.push(value)
-            times.push(time)
+            var val = undefined
+            if(up == true) {
+              res.push([time-t, m_up[i]])
+            } else {
+              res.push([time-t, m_down[i]])
+            }
           }
         }
 
-        for(var i = 0; i < times.length; i++) {
-          times[i] -= t
-        }
-
-        // zip the generated y values with the x values
-        var res = [];
-        //res.push([times[0], 0])
-        for (var i = 0; i < values.length; ++i) {
-            res.push([times[i], values[i]])
-        }
         return res;
       }
 
       //
 
-      series = [{
-        data: getData(),
+      series = [
+      {
+        data: getData(true),
         lines: {
           fill: true
         },
-        label: "Rating"
-      }];
+        label: "Up",
+        color: "#88f"
+      },
+      {
+        data: getData(false),
+        lines: {
+          fill: true
+        },
+        label: "Down",
+        color: "#f88"
+      },
+      ];
 
       var plot = $.plot(container, series, {
         grid: {
           borderWidth: 1,
-          minBorderMargin: 20,
+          minBorderMargin: 15,
           labelMargin: 10,
           backgroundColor: {
             colors: ["#fff", "#e4f4f4"]
           },
           margin: {
-            top: 8,
-            bottom: 20,
-            left: 20
+            left: 10
           },
-          markings: function(axes) {
-            var markings = [];
-            var xaxis = axes.xaxis;
-            for (var x = Math.floor(xaxis.min); x < xaxis.max; x += xaxis.tickSize * 2) {
-              markings.push({ xaxis: { from: x, to: x + xaxis.tickSize }, color: "rgba(232, 232, 255, 0.2)" });
-            }
-            return markings;
-          }
         },
         xaxis: {
-          //tickFormatter: function() {
-          //  return "";
-          //}
-          ticks: [0.0, 5.0, 10.0, 15.0, 20.0],
+          ticks: [],//[0.0, 5.0, 10.0, 15.0, 20.0],
           min: 0.0,
           max: time_window,
         },
         yaxis: {
-          min: -1.0,
-          max: +1.0,
+          min: Math.min.apply(Math, m_down),
+          max: Math.max.apply(Math, m_up),
         },
         legend: {
           show: true
         }
       });
 
-      // Create the demo X and Y axis labels
-
-      var yaxisLabel = $("<div class='axisLabel yaxisLabel'></div>")
-        .text("Rating")
-        .appendTo(container);
-
-      var xaxisLabel = $("<div class='axisLabel xaxisLabel'></div>")
-        .text("Time window (s)")
-        .appendTo(container);
-
-      // Since CSS transforms use the top-left corner of the label as the transform origin,
-      // we need to center the y-axis label by shifting it down by half its width.
-      // Subtract 20 to factor the chart's bottom margin into the centering.
-
-      yaxisLabel.css("margin-top", yaxisLabel.width() / 2 - 20);
-
       setInterval(function update() {
         if (!playing) return;
-        series[0].data = getData();
+        series[0].data = getData(true);
+        series[1].data = getData(false);
         plot.setData(series);
         plot.draw();
         frame++;
@@ -164,7 +163,8 @@
 
       $("#results-reset").click(function(){
         frame = 0;
-        series[0].data = getData();
+        series[0].data = getData(true);
+        series[1].data = getData(false);
         plot.setData(series);
         plot.draw();
       });

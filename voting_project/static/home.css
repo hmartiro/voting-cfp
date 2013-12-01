@@ -16,9 +16,9 @@ body {
 	margin-bottom: 0px;
 }
 
-#placeholder {
-    width: 650px;
-    height: 425px;
+#canvas {
+    width: 800px;
+    height: 200px;
     padding: 10px 5px 0 0;
     margin: 15px;
     border: 1px solid #ddd;
@@ -33,25 +33,4 @@ body {
     -ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-.axisLabel {
-    position: absolute;
-    text-align: center;
-    font-size: 12px;
-}
-
-.yaxisLabel {
-    top: 50%;
-    left: 2px;
-    transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -webkit-transform:  rotate(-90deg);
-    transform-origin: 0 0;
-    -o-transform-origin: 0 0;
-    -ms-transform-origin: 0 0;
-    -moz-transform-origin: 0 0;
-    -webkit-transform-origin: 0 0;
 }

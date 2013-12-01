@@ -13,7 +13,8 @@ class Discussion(models.Model):
 
 	name = models.CharField(max_length=60)
 	description = models.TextField(max_length=200, blank=True)
-
+	active = models.BooleanField(default=True)
+	
 	def __unicode__(self):
 		return u"%s" % (self.name)
 
