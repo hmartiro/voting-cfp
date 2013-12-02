@@ -9,17 +9,13 @@
     </p><p>
         The first recorded vote is at {{ start_time }} UTC time, and the fade time used is {{ fade_time }} seconds.
     </p>
-    <!--<ul>
-        {% for vote in votes %}
-            <li>{{ vote }}</li>
-        {% endfor %}
-    </ul>-->
 
     <button class="btn btn-success btn-large" id="results-play">Play</button>
     <button class="btn btn-default btn-large" id="results-reset">Reset</button>
     <div id="canvas"></div>
 
     <script src="/static/jquery.flot.min.js"></script>
+    <script src="/static/jquery.flot.navigate.js"></script>
 
     <script>
     $(function() {
@@ -33,11 +29,6 @@
       var frame = 0;
 
       var container = $("#canvas");
-
-      // Determine how many data points to keep based on the placeholder's initial size;
-      // this gives us a nice high-res plot while avoiding more than one point per pixel.
-
-      //var maximum = container.outerWidth() / 2 || 300;
 
       var m_times = [
         {% for t in m_times %}
@@ -57,49 +48,23 @@
         {% endfor %}
       ]
 
-      var values_all = [
-        {% for v in values %}
-          {{ v }},
-        {% endfor %}
-      ];
-
-      var times_all = [
-        {% for t in times %}
-          {{ t }},
-        {% endfor %}
-      ];
-
       var time_window = 20;
 
       var playing = false;
 
-      function getData(up) {
+      up_series = $.map(m_times, function(m_time, idx) {
+          return [[m_time, m_up[idx]]]
+        });
 
-        var t = frame * FRAMETIME;
-        var res = [];
-
-        for(var i = 0; i < m_times.length; i++) {
-
-          time = m_times[i] + time_window
-
-          if((time > t) && (time < (t + time_window + 5))) {
-            var val = undefined
-            if(up == true) {
-              res.push([time-t, m_up[i]])
-            } else {
-              res.push([time-t, m_down[i]])
-            }
-          }
-        }
-
-        return res;
-      }
+      down_series = $.map(m_times, function(m_time, idx) {
+          return [[m_time, m_down[idx]]]
+        });
 
       //
 
       series = [
       {
-        data: getData(true),
+        data: up_series,
         lines: {
           fill: true
         },
@@ -107,7 +72,7 @@
         color: "#88f"
       },
       {
-        data: getData(false),
+        data: down_series,
         lines: {
           fill: true
         },
@@ -116,7 +81,8 @@
       },
       ];
 
-      var plot = $.plot(container, series, {
+      axis_max = Math.max(-Math.min.apply(Math, m_down), Math.max.apply(Math, m_up))
+      plot = $.plot(container, series, {
         grid: {
           borderWidth: 1,
           minBorderMargin: 15,
@@ -125,29 +91,41 @@
             colors: ["#fff", "#e4f4f4"]
           },
           margin: {
-            left: 10
+            left: 10,
+            bottom: 5,
           },
         },
         xaxis: {
-          ticks: [],//[0.0, 5.0, 10.0, 15.0, 20.0],
+          ticks: _.range(0, m_times[m_times.length-1]+time_window*2, 5.0),
           min: 0.0,
           max: time_window,
         },
         yaxis: {
-          min: Math.min.apply(Math, m_down),
-          max: Math.max.apply(Math, m_up),
+          min: -axis_max,
+          max: +axis_max,
         },
         legend: {
-          show: true
+          show: true,
+          position: "sw",
         }
       });
 
+      plot.pan({ left: -$('#canvas').css('width').substring(0, 3)+45, top: 0 });
+
+      /*
       setInterval(function update() {
-        if (!playing) return;
+        
         series[0].data = getData(true);
         series[1].data = getData(false);
         plot.setData(series);
         plot.draw();
+        frame++;
+      }, FRAMETIME * 1000);
+      */
+
+      setInterval(function plotPan() {
+        if (!playing) return;
+        plot.pan({ left: 1, top: 0 })
         frame++;
       }, FRAMETIME * 1000);
 
@@ -159,14 +137,11 @@
           playing = true;
           $('#results-play').html('Pause')
         }
-      })
+      });
 
       $("#results-reset").click(function(){
+        plot.pan({ left: -frame, top: 0 });
         frame = 0;
-        series[0].data = getData(true);
-        series[1].data = getData(false);
-        plot.setData(series);
-        plot.draw();
       });
 
     });
