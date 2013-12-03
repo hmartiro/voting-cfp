@@ -107,6 +107,9 @@
         legend: {
           show: true,
           position: "sw",
+        },
+         pan: {
+            interactive: true
         }
       });
 
@@ -125,7 +128,7 @@
       */
 
       pan_amount = (plot_width + 10)/(time_window) * FRAMETIME;
-      
+
       setInterval(function plotPan() {
         if (!playing) return;
         plot.pan({ left: pan_amount, top: 0 })
