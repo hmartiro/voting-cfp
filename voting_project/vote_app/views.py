@@ -83,7 +83,6 @@ def generate_momentum_plot(times, values, fps, fade_time):
 
     # Generate time steps
     m_times = [t/fps for t in range(0, int((times[-1] + fade_time + 1) * fps))]
-    print m_times
 
     # Lists to store the momentum streams
     momentum_up = []
@@ -116,7 +115,6 @@ def generate_momentum_plot(times, values, fps, fade_time):
 
         momentum_up.append(m_up)
         momentum_down.append(m_down)
-    
-    print momentum_up
-    print momentum_down
+
     return m_times, momentum_up, momentum_down
+    
