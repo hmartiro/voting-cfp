@@ -24,7 +24,7 @@
       var data_fps = {{ fps }}
       var data_fade_time = {{ fade_time }}
 
-      var FPS = 25.0;
+      var FPS = 30.0;
       var FRAMETIME = 1.0 / FPS;
       var frame = 0;
 
@@ -48,7 +48,7 @@
         {% endfor %}
       ]
 
-      var time_window = 20;
+      var time_window = 20.0;
 
       var playing = false;
 
@@ -110,7 +110,8 @@
         }
       });
 
-      plot.pan({ left: -$('#canvas').css('width').substring(0, 3)+45, top: 0 });
+      var plot_width = $('#canvas').css('width').substring(0, 3) - 48
+      plot.pan({ left: -plot_width, top: 0 });
 
       /*
       setInterval(function update() {
@@ -123,9 +124,11 @@
       }, FRAMETIME * 1000);
       */
 
+      var pan_amount = (plot_width + 10)/(time_window) * FRAMETIME;
+
       setInterval(function plotPan() {
         if (!playing) return;
-        plot.pan({ left: 1, top: 0 })
+        plot.pan({ left: pan_amount, top: 0 })
         frame++;
       }, FRAMETIME * 1000);
 
@@ -140,7 +143,7 @@
       });
 
       $("#results-reset").click(function(){
-        plot.pan({ left: -frame, top: 0 });
+        plot.pan({ left: -frame * pan_amount, top: 0 });
         frame = 0;
       });
 
