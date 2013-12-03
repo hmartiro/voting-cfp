@@ -60,7 +60,7 @@ def view(request, discussion_id):
     values = [v.value for v in votes]
 
     # Constants to play with
-    FPS = 5.
+    FPS = 3.
     FADE_TIME = 10.
 
     m_times, m_up, m_down = generate_momentum_plot(times, values, FPS, FADE_TIME)
@@ -117,4 +117,3 @@ def generate_momentum_plot(times, values, fps, fade_time):
         momentum_down.append(m_down)
 
     return m_times, momentum_up, momentum_down
-    
