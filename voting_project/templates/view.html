@@ -31,21 +31,15 @@
       var container = $("#canvas");
 
       var m_times = [
-        {% for t in m_times %}
-          {{ t }},
-        {% endfor %}
+        {% for t in m_times %} {{ t }}, {% endfor %}
       ]
 
       var m_up = [
-        {% for m in m_up %}
-          {{ m }},
-        {% endfor %}
+        {% for m in m_up %} {{ m }}, {% endfor %}
       ]
 
       var m_down = [
-        {% for m in m_down %}
-          {{ m }},
-        {% endfor %}
+        {% for m in m_down %} {{ m }}, {% endfor %}
       ]
 
       var time_window = 20.0;
