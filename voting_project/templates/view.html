@@ -124,8 +124,8 @@
       }, FRAMETIME * 1000);
       */
 
-      var pan_amount = (plot_width + 10)/(time_window) * FRAMETIME;
-
+      pan_amount = (plot_width + 10)/(time_window) * FRAMETIME;
+      
       setInterval(function plotPan() {
         if (!playing) return;
         plot.pan({ left: pan_amount, top: 0 })
